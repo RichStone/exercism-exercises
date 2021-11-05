@@ -1,5 +1,5 @@
 class Scrabble
-  TILES = {
+  DEFAULT_SET = {
     A: 1, N: 1,
     B: 3, O: 1,
     C: 3, P: 3,
@@ -21,16 +21,27 @@ class Scrabble
 
   private
 
-  attr_reader :tiles
+  attr_reader :tiles, :tile_set
 
-  def initialize(tiles)
-    @tiles = tiles.to_s.chars.map { |tile| tile.upcase.to_sym }
+  def initialize(tiles, tile_set = DEFAULT_SET)
+    @tile_set = normalize_tile_set(tile_set)
+    @tiles = tiles.to_s.chars.map { |tile| normalize_tiles(tile) }.compact
+  end
+
+  def normalize_tile_set(set)
+    set.transform_keys!(&:upcase)
+    set.transform_keys!(&:to_sym)
+  end
+
+  def normalize_tiles(tile)
+    normalized = tile.upcase.to_sym
+    normalized if tile_set.has_key?(normalized)
   end
 
   public
 
   def score
-    tiles.sum { |tile| TILES.fetch(tile, 0) }
+    tiles.sum { |tile| tile_set[tile] }
   end
 end
 
@@ -74,7 +85,6 @@ if defined? Minitest
     }
 
   describe 'Mentor Auxilary Tests' do
-
     it 'must not modify my objects' do
       # give it a chance to change my tiles
       Scrabble.new('alphabet', Hawaiian_Tiles)
