@@ -1,5 +1,5 @@
 class Scrabble
-  DEFAULT_SET = {
+  TILE_SCORES = Hash.new(0).merge!({
     A: 1, N: 1,
     B: 3, O: 1,
     C: 3, P: 3,
@@ -13,7 +13,7 @@ class Scrabble
     K: 5, X: 8,
     L: 1, Y: 4,
     M: 3, Z: 10
-  }
+  })
 
   def self.score(letters)
     new(letters).score
@@ -23,9 +23,9 @@ class Scrabble
 
   attr_reader :tiles, :tile_set
 
-  def initialize(tiles, tile_set = DEFAULT_SET)
+  def initialize(tiles, tile_set = TILE_SCORES)
     @tile_set = normalize_tile_set(tile_set)
-    @tiles = tiles.to_s.chars.map { |tile| normalize_tiles(tile) }.compact
+    @tiles = tiles.to_s.chars.map { |tile| normalize_tiles(tile) }
   end
 
   def normalize_tile_set(set)
@@ -34,8 +34,7 @@ class Scrabble
   end
 
   def normalize_tiles(tile)
-    normalized = tile.upcase.to_sym
-    normalized if tile_set.has_key?(normalized)
+    tile.upcase.to_sym
   end
 
   public
