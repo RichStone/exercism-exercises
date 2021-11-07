@@ -1,5 +1,5 @@
 class Scrabble
-  TILE_SCORES = Hash.new(0).merge!({
+  TILE = {
     A: 1, N: 1,
     B: 3, O: 1,
     C: 3, P: 3,
@@ -13,7 +13,7 @@ class Scrabble
     K: 5, X: 8,
     L: 1, Y: 4,
     M: 3, Z: 10
-  })
+  }
 
   def self.score(letters)
     new(letters).score
@@ -23,24 +23,26 @@ class Scrabble
 
   attr_reader :tiles, :tile_set
 
-  def initialize(tiles, tile_set = TILE_SCORES)
+  def initialize(tiles, tile_set = TILE)
     @tile_set = normalize_tile_set(tile_set)
     @tiles = tiles.to_s.chars.map { |tile| normalize_tiles(tile) }
   end
 
   def normalize_tile_set(set)
     set.transform_keys!(&:upcase)
-    set.transform_keys!(&:to_sym)
+    set.transform_keys!(&:to_s)
+    set.default_proc = proc { |hash, key| hash[key] = 0 }
+    set
   end
 
   def normalize_tiles(tile)
-    tile.upcase.to_sym
+    tile.upcase
   end
 
   public
 
   def score
-    tiles.sum { |tile| tile_set[tile] }
+    tiles.sum(&tile_set)
   end
 end
 
@@ -90,6 +92,12 @@ if defined? Minitest
       actual = Hawaiian_Tiles.default
       expected = nil
       expect(actual).must_be_nil("Must not modify the given tile set.")
+    end
+
+    it 'must score "he‘e" correctly' do
+      actual = Scrabble.new('he‘e', Hawaiian_Tiles).score
+      expected = 14
+      expect(actual).must_equal expected
     end
 
   end
