@@ -71,33 +71,37 @@ end
 
 if defined? Minitest
 
-  Hawaiian_Tiles =
-    {
-      'a' => 1, 'n' => 3,
-      'o' => 2,
-      'p' => 8,
-      'e' => 4,
-      'h' => 6, 'u' => 5,
-      'i' => 3,
-      'w' => 9,
-      'k' => 2,
-      'l' => 7,
-      'm' => 8
-    }
+  if $DEBUG
 
-  describe 'Mentor Auxilary Tests' do
-    it 'must not modify my objects' do
-      # give it a chance to change my tiles
-      Scrabble.new('alphabet', Hawaiian_Tiles)
-      actual = Hawaiian_Tiles.default
-      expected = nil
-      expect(actual).must_be_nil("Must not modify the given tile set.")
-    end
+    Hawaiian_Tiles =
+      {
+        'a' => 1, 'n' => 3,
+        'o' => 2,
+        'p' => 8,
+        'e' => 4,
+        'h' => 6, 'u' => 5,
+        'i' => 3,
+        'w' => 9,
+        'k' => 2,
+        'l' => 7,
+        'm' => 8
+      }
 
-    it 'must score "he‘e" correctly' do
-      actual = Scrabble.new('he‘e', Hawaiian_Tiles).score
-      expected = 14
-      expect(actual).must_equal expected
+    describe 'Mentor Auxilary Tests' do
+      it 'must not modify my objects' do
+        # give it a chance to change my tiles
+        Scrabble.new('alphabet', Hawaiian_Tiles)
+        actual = Hawaiian_Tiles.default
+        expected = nil
+        expect(actual).must_be_nil("Must not modify the given tile set.")
+      end
+
+      it 'must score "he‘e" correctly' do
+        actual = Scrabble.new('he‘e', Hawaiian_Tiles).score
+        expected = 14
+        expect(actual).must_equal expected
+      end
+
     end
 
   end
