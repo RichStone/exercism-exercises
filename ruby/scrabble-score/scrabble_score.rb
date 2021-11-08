@@ -24,14 +24,14 @@ class Scrabble
   attr_reader :tiles, :tile_set
 
   def initialize(tiles, tile_set = TILE)
-    @tile_set = normalize_tile_set(tile_set)
+    @tile_set = normalize_tile_set(tile_set.clone)
     @tiles = tiles.to_s.chars.map { |tile| normalize_tiles(tile) }
   end
 
   def normalize_tile_set(set)
     set.transform_keys!(&:upcase)
     set.transform_keys!(&:to_s)
-    set.default_proc = proc { |hash, key| hash[key] = 0 }
+    set.default = 0
     set
   end
 
